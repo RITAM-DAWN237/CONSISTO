@@ -1,0 +1,55 @@
+# Netlify configuration for CONSISTO (static PWA build)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Firebase Auth helper proxy (optional, recommended for Google sign-in on Safari / iOS).
+# Serves https://<your-site>/__/auth/* from the Firebase project so the sign-in helper is same-origin
+# (Firebase "redirect best practices", option 3). It only takes effect once you set
+# VITE_FIREBASE_AUTH_DOMAIN to your site's domain — see README → Google sign-in.
+[[redirects]]
+  from = "/__/auth/*"
+  to = "https://consisto-5714a.firebaseapp.com/__/auth/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/__/firebase/*"
+  to = "https://consisto-5714a.firebaseapp.com/__/firebase/:splat"
+  status = 200
+  force = true
+
+# The service worker must never be cached by the browser/CDN so updates are detected quickly.
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+    Service-Worker-Allowed = "/"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json"
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/logo/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # SAMEORIGIN (not DENY) so Firebase Auth's same-origin helper iframe works when proxied.
+    X-Frame-Options = "SAMEORIGIN"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

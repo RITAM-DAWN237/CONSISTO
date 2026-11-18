@@ -1,0 +1,92 @@
+rules_version = '2';
+
+// CONSISTO — Firestore security rules
+// Every document lives under users/{userId}. Only the authenticated owner can read or write it.
+// Deploy with:  firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    // Optional string field with a maximum length.
+    function optStr(field, max) {
+      return !(field in request.resource.data)
+        || request.resource.data[field] == null
+        || (request.resource.data[field] is string && request.resource.data[field].size() <= max);
+    }
+
+    // Required non-empty string with a maximum length.
+    function reqStr(field, max) {
+      return field in request.resource.data
+        && request.resource.data[field] is string
+        && request.resource.data[field].size() > 0
+        && request.resource.data[field].size() <= max;
+    }
+
+    match /users/{userId} {
+      allow read, delete: if isOwner(userId);
+      allow create, update: if isOwner(userId)
+        && optStr('displayName', 80)
+        && optStr('email', 320)
+        && optStr('photoData', 200000)
+        && optStr('photoURL', 2000);
+
+      match /tasks/{taskId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && reqStr('title', 120)
+          && optStr('description', 2000)
+          && optStr('notes', 5000)
+          && request.resource.data.schedules is list
+          && request.resource.data.schedules.size() > 0
+          && request.resource.data.schedules.size() <= 60;
+      }
+
+      match /completions/{completionId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && reqStr('taskId', 128)
+          && reqStr('dateKey', 10)
+          && request.resource.data.status in ['completed', 'skipped'];
+      }
+
+      match /notes/{noteId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId)
+          && optStr('title', 200)
+          && optStr('content', 400000)
+          && optStr('text', 4000)
+          && request.resource.data.type in ['quick', 'detailed'];
+      }
+
+      match /categories/{categoryId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId) && reqStr('name', 32);
+      }
+
+      match /notifications/{notificationId} {
+        allow read, delete: if isOwner(userId);
+        allow create, update: if isOwner(userId) && optStr('title', 300) && optStr('body', 1000);
+      }
+
+      match /achievements/{achievementId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /statistics/{periodId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Deny everything else.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
