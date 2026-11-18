@@ -194,8 +194,8 @@ export default function AuthPage() {
       </div>
 
       {/* Form */}
-      <div className="flex flex-1 items-center justify-center px-5 py-10">
-        <div className="w-full max-w-[420px]">
+      <div className="flex flex-1 items-center justify-center px-4 py-8 md:px-8">
+        <div className="w-full max-w-[440px] rounded-3xl border border-line bg-card/60 backdrop-blur-xl p-6 sm:p-8 shadow-2xl ring-1 ring-white/10">
           <div className="mb-8 flex flex-col items-center text-center lg:hidden">
             <Logo size={64} />
             <p className="mt-3 text-2xl font-bold tracking-tight text-fg">Consisto</p>
@@ -203,9 +203,9 @@ export default function AuthPage() {
           </div>
 
           {mode !== 'forgot' && (
-            <div className="mb-6 grid grid-cols-2 rounded-xl border border-line bg-card-2 p-1" role="tablist">
+            <div className="mb-6 grid grid-cols-2 rounded-xl border border-line bg-card-2/80 p-1" role="tablist">
               {(['signin', 'signup'] as const).map((m) => (
-                <button key={m} role="tab" aria-selected={mode === m} onClick={() => switchMode(m)} className={cn('rounded-lg py-2 text-sm font-semibold transition', mode === m ? 'bg-accent text-accent-fg shadow' : 'text-muted hover:text-fg')}>
+                <button key={m} role="tab" aria-selected={mode === m} onClick={() => switchMode(m)} className={cn('rounded-lg py-2 text-sm font-semibold transition', mode === m ? 'bg-accent text-accent-fg shadow-sm' : 'text-muted hover:text-fg')}>
                   {m === 'signin' ? 'Sign in' : 'Create account'}
                 </button>
               ))}

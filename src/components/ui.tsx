@@ -48,11 +48,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-accent text-accent-fg hover:brightness-110 shadow-[0_10px_28px_-14px_var(--accent)]',
-  secondary: 'bg-card-2 text-fg border border-line hover:border-line-strong hover:bg-fg/[0.06]',
-  ghost: 'text-muted hover:text-fg hover:bg-fg/[0.06]',
-  danger: 'bg-bad text-white hover:brightness-110',
-  soft: 'bg-accent/15 text-accent hover:bg-accent/25',
+  primary: 'bg-gradient-to-r from-accent to-accent-strong text-accent-fg hover:brightness-110 shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_8px_20px_-6px_var(--accent)] border border-white/10 active:scale-[0.98]',
+  secondary: 'bg-card-2/90 backdrop-blur-sm text-fg border border-line hover:border-line-strong hover:bg-card-2 shadow-xs active:scale-[0.98]',
+  ghost: 'text-muted hover:text-fg hover:bg-fg/[0.06] active:scale-[0.98]',
+  danger: 'bg-gradient-to-r from-bad to-red-600 text-white hover:brightness-110 shadow-[0_8px_20px_-6px_rgba(239,68,68,0.5)] active:scale-[0.98]',
+  soft: 'bg-accent/12 text-accent border border-accent/20 hover:bg-accent/22 active:scale-[0.98]',
 };
 
 const SIZES: Record<Size, string> = {
@@ -111,10 +111,14 @@ export function CardHeader({
   return (
     <div className={cn('flex items-center justify-between gap-3 px-4 pb-3 pt-4 md:px-5', className)}>
       <div className="flex min-w-0 items-center gap-2.5">
-        {icon && <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent/15 text-accent [&>svg]:h-4 [&>svg]:w-4">{icon}</span>}
+        {icon && (
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-accent/12 text-accent ring-1 ring-accent/20 [&>svg]:h-4 [&>svg]:w-4">
+            {icon}
+          </span>
+        )}
         <div className="min-w-0">
-          <h2 className="truncate text-[15px] font-semibold text-fg">{title}</h2>
-          {subtitle && <p className="truncate text-xs text-muted">{subtitle}</p>}
+          <h2 className="truncate text-[15px] font-semibold text-fg tracking-tight">{title}</h2>
+          {subtitle && <p className="truncate text-xs text-muted/90">{subtitle}</p>}
         </div>
       </div>
       {action}
@@ -174,10 +178,10 @@ export function Modal({
   const sizes = { sm: 'md:max-w-md', md: 'md:max-w-xl', lg: 'md:max-w-2xl', xl: 'md:max-w-4xl' };
   return createPortal(
     <div className="fixed inset-0 z-[70] flex items-end justify-center md:items-center md:p-6" role="dialog" aria-modal="true" aria-label={label}>
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] animate-fade-in" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/65 backdrop-blur-[3px] animate-fade-in" onClick={onClose} />
       <div
         className={cn(
-          'relative flex w-full flex-col overflow-hidden border-line bg-card shadow-2xl',
+          'relative flex w-full flex-col overflow-hidden border-line bg-card/95 backdrop-blur-xl shadow-2xl ring-1 ring-white/10',
           variant === 'full'
             ? 'h-[100dvh] animate-slide-up md:h-auto md:max-h-[90vh] md:rounded-2xl md:border md:animate-scale-in'
             : 'max-h-[92dvh] rounded-t-3xl border-t animate-slide-up md:max-h-[88vh] md:rounded-2xl md:border md:animate-scale-in',
@@ -195,7 +199,7 @@ export function Modal({
 
 // ─── Form controls ─────────────────────────────────────────────
 export const inputClass =
-  'w-full rounded-xl border border-line bg-card-2 px-3.5 py-2.5 text-sm text-fg placeholder:text-faint outline-none transition focus:border-accent/60 focus:ring-2 focus:ring-accent/20 disabled:opacity-60';
+  'w-full rounded-xl border border-line bg-card-2/90 px-3.5 py-2.5 text-sm text-fg placeholder:text-faint outline-none transition focus:border-accent/60 focus:ring-2 focus:ring-accent/20 disabled:opacity-60 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]';
 
 export function Field({
   label,
@@ -245,11 +249,11 @@ export function Toggle({
       disabled={disabled}
       onClick={() => onChange(!checked)}
       className={cn(
-        'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 disabled:opacity-50',
-        checked ? 'bg-accent' : 'bg-fg/15'
+        'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 disabled:opacity-50',
+        checked ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-fg/15'
       )}
     >
-      <span className={cn('inline-block h-5 w-5 rounded-full bg-white shadow transition-transform', checked ? 'translate-x-[22px]' : 'translate-x-0.5')} />
+      <span className={cn('inline-block h-5 w-5 rounded-full bg-white shadow-md transition-transform duration-200', checked ? 'translate-x-[22px]' : 'translate-x-0.5')} />
     </button>
   );
 }
@@ -268,7 +272,7 @@ export function Segmented<T extends string | number>({
   size?: 'sm' | 'md';
 }) {
   return (
-    <div role="radiogroup" className={cn('flex rounded-xl border border-line bg-card-2 p-1', className)}>
+    <div role="radiogroup" className={cn('flex rounded-xl border border-line bg-card-2/80 backdrop-blur-sm p-1', className)}>
       {options.map((o) => (
         <button
           key={String(o.value)}
@@ -277,9 +281,9 @@ export function Segmented<T extends string | number>({
           aria-checked={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
-            'flex-1 whitespace-nowrap rounded-lg font-semibold transition-all',
+            'flex-1 whitespace-nowrap rounded-lg font-semibold transition-all duration-150',
             size === 'sm' ? 'px-2 py-1 text-xs' : 'px-2.5 py-1.5 text-[13px]',
-            o.value === value ? 'bg-accent text-accent-fg shadow' : 'text-muted hover:text-fg'
+            o.value === value ? 'bg-accent text-accent-fg shadow-sm' : 'text-muted hover:text-fg'
           )}
         >
           {o.label}
@@ -291,17 +295,17 @@ export function Segmented<T extends string | number>({
 
 // ─── Status display ────────────────────────────────────────────
 export const TONE: Record<Tone, string> = {
-  ok: 'bg-ok/15 text-ok',
-  warn: 'bg-warn/15 text-warn',
-  bad: 'bg-bad/15 text-bad',
-  accent: 'bg-accent/15 text-accent',
-  muted: 'bg-fg/[0.07] text-muted',
-  info: 'bg-info/15 text-info',
+  ok: 'bg-ok/12 text-ok border border-ok/25',
+  warn: 'bg-warn/12 text-warn border border-warn/25',
+  bad: 'bg-bad/12 text-bad border border-bad/25',
+  accent: 'bg-accent/12 text-accent border border-accent/25',
+  muted: 'bg-fg/[0.05] text-muted border border-line',
+  info: 'bg-info/12 text-info border border-info/25',
 };
 
 export function Pill({ tone = 'muted', children, className, icon }: { tone?: Tone; children: ReactNode; className?: string; icon?: ReactNode }) {
   return (
-    <span className={cn('inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold [&>svg]:h-3 [&>svg]:w-3', TONE[tone], className)}>
+    <span className={cn('inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide [&>svg]:h-3 [&>svg]:w-3', TONE[tone], className)}>
       {icon}
       {children}
     </span>
@@ -428,7 +432,7 @@ export function Menu({ items, align = 'right', label = 'More options', button }:
         {button ?? <MoreHorizontal className="h-4 w-4" />}
       </button>
       {open && (
-        <div role="menu" className={cn('absolute z-40 mt-1 min-w-[200px] rounded-xl border border-line bg-card-2 p-1 shadow-2xl animate-scale-in', align === 'right' ? 'right-0' : 'left-0')}>
+        <div role="menu" className={cn('absolute z-40 mt-1 min-w-[200px] rounded-xl border border-line bg-card-2/95 backdrop-blur-xl p-1 shadow-2xl ring-1 ring-white/10 animate-scale-in', align === 'right' ? 'right-0' : 'left-0')}>
           {items.filter((x): x is MenuItem => !!x).map((it, i) => (
             <button
               key={i}
@@ -438,7 +442,7 @@ export function Menu({ items, align = 'right', label = 'More options', button }:
                 setOpen(false);
                 it.onClick();
               }}
-              className={cn('flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm [&>span>svg]:h-4 [&>span>svg]:w-4', it.danger ? 'text-bad hover:bg-bad/10' : 'text-fg hover:bg-fg/[0.06]')}
+              className={cn('flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition-colors [&>span>svg]:h-4 [&>span>svg]:w-4', it.danger ? 'text-bad hover:bg-bad/12' : 'text-fg hover:bg-fg/[0.06]')}
             >
               {it.icon && <span>{it.icon}</span>}
               {it.label}

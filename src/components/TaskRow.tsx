@@ -26,15 +26,15 @@ export function TickButton({ status, onToggle, size = 'md' }: { status: OccStatu
     >
       <span
         className={cn(
-          'grid place-items-center rounded-full border-2 transition-all duration-200',
+          'grid place-items-center rounded-full border-2 transition-all duration-200 active:scale-90',
           size === 'sm' ? 'h-6 w-6' : 'h-7 w-7',
           done
-            ? 'border-ok bg-ok text-white shadow-[0_0_0_4px_color-mix(in_oklab,var(--ok)_18%,transparent)] animate-pop'
+            ? 'border-ok bg-gradient-to-tr from-ok to-emerald-400 text-white shadow-[0_0_12px_rgba(34,197,94,0.35)] animate-pop'
             : status === 'missed'
               ? 'border-bad/70 hover:bg-bad/10'
               : status === 'skipped'
                 ? 'border-dashed border-faint text-faint'
-                : 'border-faint/70 hover:border-accent hover:bg-accent/10'
+                : 'border-faint/70 hover:border-accent hover:bg-accent/10 hover:shadow-[0_0_8px_var(--accent)]'
         )}
       >
         {done ? <Check className="h-4 w-4" strokeWidth={3} /> : status === 'skipped' ? <Minus className="h-3.5 w-3.5" /> : null}
@@ -73,7 +73,7 @@ export function TaskRow({ item, showDate }: { item: OccItem; showDate?: boolean 
       onKeyDown={(e) => {
         if (e.key === 'Enter') open();
       }}
-      className={cn('group flex cursor-pointer items-center gap-3 rounded-xl px-2 transition-colors hover:bg-fg/[0.04]', compact ? 'py-1.5' : 'py-2.5')}
+      className={cn('group flex cursor-pointer items-center gap-3 rounded-xl px-2.5 transition-all duration-150 hover:bg-fg/[0.05] border border-transparent hover:border-line/40', compact ? 'py-1.5' : 'py-2.5')}
     >
       <TickButton status={status} onToggle={() => toggle(item)} />
       <div className="min-w-0 flex-1 pl-1">

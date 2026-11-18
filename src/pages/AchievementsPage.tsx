@@ -67,14 +67,14 @@ export default function AchievementsPage() {
       <PageHeader title="Achievements" subtitle="Earned only through real, completed activity" />
       <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          { icon: <Award className="h-5 w-5 text-accent" />, label: 'Badges unlocked', value: `${unlocked}/${ACHIEVEMENTS.length}` },
-          { icon: <Flame className="h-5 w-5 text-orange-400" />, label: 'Current streak', value: `${s.streak.current} days` },
-          { icon: <Trophy className="h-5 w-5 text-amber-400" />, label: 'Longest streak', value: `${s.longestStreak} days` },
-          { icon: <Award className="h-5 w-5 text-ok" />, label: 'Total completions', value: `${s.totalCompletions}` },
+          { icon: <Award className="h-5 w-5 text-accent" />, label: 'Badges unlocked', value: `${unlocked}/${ACHIEVEMENTS.length}`, bg: 'bg-accent/15 ring-1 ring-accent/20' },
+          { icon: <Flame className="h-5 w-5 text-orange-400" />, label: 'Current streak', value: `${s.streak.current} days`, bg: 'bg-orange-500/15 ring-1 ring-orange-500/20' },
+          { icon: <Trophy className="h-5 w-5 text-amber-400" />, label: 'Longest streak', value: `${s.longestStreak} days`, bg: 'bg-amber-400/15 ring-1 ring-amber-400/20' },
+          { icon: <Award className="h-5 w-5 text-ok" />, label: 'Total completions', value: `${s.totalCompletions}`, bg: 'bg-ok/15 ring-1 ring-ok/20' },
         ].map((x) => (
-          <Card key={x.label} className="p-4">
-            {x.icon}
-            <p className="mt-2 text-xl font-extrabold text-fg md:text-2xl">{x.value}</p>
+          <Card key={x.label} className="relative overflow-hidden p-4">
+            <span className={cn('grid h-10 w-10 place-items-center rounded-2xl', x.bg)}>{x.icon}</span>
+            <p className="mt-3 text-xl font-extrabold text-fg md:text-2xl">{x.value}</p>
             <p className="text-xs text-muted">{x.label}</p>
           </Card>
         ))}

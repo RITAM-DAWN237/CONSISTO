@@ -54,14 +54,17 @@ function Greeting() {
   const { now, todayKey } = useStats();
   const first = profile.displayName.split(' ')[0] || 'there';
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-r from-accent/[0.10] via-card to-card px-5 py-5 md:px-7 md:py-7">
+    <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-r from-accent/[0.12] via-card to-card px-5 py-5 md:px-7 md:py-6 shadow-xs">
       <HeroArt />
       <div className="relative max-w-[70%]">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-accent">{formatDateKey(todayKey, 'long')}</p>
-        <h1 className="mt-1 text-[22px] font-extrabold leading-tight tracking-tight text-fg md:text-[32px]">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/12 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-accent border border-accent/20">
+          <Sparkles className="h-3 w-3" />
+          {formatDateKey(todayKey, 'long')}
+        </span>
+        <h1 className="mt-2 text-[22px] font-extrabold leading-tight tracking-tight text-fg md:text-[32px]">
           {partOfDay(now.minutes)}, {first}! <span className="inline-block origin-[70%_70%] animate-wave">👋</span>
         </h1>
-        <p className="mt-1 text-sm text-muted md:text-base">{MOTIVATION[dayNum(todayKey) % MOTIVATION.length]}</p>
+        <p className="mt-1 text-sm text-muted md:text-base leading-relaxed">{MOTIVATION[dayNum(todayKey) % MOTIVATION.length]}</p>
       </div>
     </div>
   );
@@ -79,20 +82,20 @@ function StatCards() {
   const lastWeek = aggregate(dayStats, rangeKeys(addDays(ws, -7), addDays(ws, -1)));
   const delta = week.plannedMin - lastWeek.plannedMin;
   const todayKept = dayUnitState(dayStats.get(todayKey), prefs.streakRule, true) === 'kept';
-  const card = 'relative overflow-hidden p-3.5 md:p-5';
+  const card = 'relative overflow-hidden p-3.5 md:p-5 transition hover:border-line-strong';
   return (
     <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
-      <Card className={card}>
+      <Card className={cn(card, 'before:pointer-events-none before:absolute before:-right-6 before:-top-6 before:h-28 before:w-28 before:rounded-full before:bg-orange-500/10 before:blur-xl')}>
         <div className="flex items-start gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-orange-500/15 md:h-11 md:w-11">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-orange-500/15 ring-1 ring-orange-500/20 md:h-11 md:w-11">
             <Flame className="h-5 w-5 text-orange-400 md:h-6 md:w-6" />
           </span>
           <div className="min-w-0">
-            <p className="text-2xl font-extrabold leading-none text-fg md:text-3xl">{streak.current}</p>
+            <p className="text-2xl font-extrabold leading-none tracking-tight text-fg md:text-3xl">{streak.current}</p>
             <p className="mt-1 text-xs text-muted">Day Streak</p>
           </div>
           {todayKept && streak.current > 0 && (
-            <span className="ml-auto inline-flex items-center gap-0.5 text-xs font-semibold text-ok">
+            <span className="ml-auto inline-flex items-center gap-0.5 rounded-full bg-ok/12 px-1.5 py-0.5 text-xs font-semibold text-ok border border-ok/20">
               <ArrowUp className="h-3.5 w-3.5" />1
             </span>
           )}
@@ -102,15 +105,15 @@ function StatCards() {
         </div>
       </Card>
 
-      <Card className={card}>
+      <Card className={cn(card, 'before:pointer-events-none before:absolute before:-right-6 before:-top-6 before:h-28 before:w-28 before:rounded-full before:bg-ok/10 before:blur-xl')}>
         <div className="flex items-start gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-ok/15 md:h-11 md:w-11">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-ok/15 ring-1 ring-ok/20 md:h-11 md:w-11">
             <CheckCircle2 className="h-5 w-5 text-ok md:h-6 md:w-6" />
           </span>
           <div className="min-w-0">
-            <p className="text-2xl font-extrabold leading-none text-fg md:text-3xl">
+            <p className="text-2xl font-extrabold leading-none tracking-tight text-fg md:text-3xl">
               {done}
-              <span className="text-lg text-muted"> / {total}</span>
+              <span className="text-lg font-semibold text-muted"> / {total}</span>
             </p>
             <p className="mt-1 text-xs text-muted">Today's Progress</p>
           </div>
@@ -121,13 +124,13 @@ function StatCards() {
         </div>
       </Card>
 
-      <Card className={card}>
+      <Card className={cn(card, 'before:pointer-events-none before:absolute before:-right-6 before:-top-6 before:h-28 before:w-28 before:rounded-full before:bg-accent/10 before:blur-xl')}>
         <div className="flex items-start gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-accent/15 md:h-11 md:w-11">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-accent/15 ring-1 ring-accent/20 md:h-11 md:w-11">
             <Clock className="h-5 w-5 text-accent md:h-6 md:w-6" />
           </span>
           <div className="min-w-0">
-            <p className="text-2xl font-extrabold leading-none text-fg md:text-3xl">{formatHours(week.plannedMin)}</p>
+            <p className="text-2xl font-extrabold leading-none tracking-tight text-fg md:text-3xl">{formatHours(week.plannedMin)}</p>
             <p className="mt-1 text-xs text-muted">Planned this week</p>
           </div>
         </div>
@@ -140,13 +143,13 @@ function StatCards() {
         </div>
       </Card>
 
-      <Card className={cn(card, 'cursor-pointer transition hover:border-line-strong')} onClick={() => navigate('/achievements')}>
+      <Card className={cn(card, 'cursor-pointer before:pointer-events-none before:absolute before:-right-6 before:-top-6 before:h-28 before:w-28 before:rounded-full before:bg-amber-400/10 before:blur-xl hover:border-line-strong active:scale-[0.99]')} onClick={() => navigate('/achievements')}>
         <div className="flex items-start gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-amber-400/15 md:h-11 md:w-11">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-amber-400/15 ring-1 ring-amber-400/20 md:h-11 md:w-11">
             <Trophy className="h-5 w-5 text-amber-400 md:h-6 md:w-6" />
           </span>
           <div className="min-w-0">
-            <p className="text-2xl font-extrabold leading-none text-fg md:text-3xl">{totalCompletions}</p>
+            <p className="text-2xl font-extrabold leading-none tracking-tight text-fg md:text-3xl">{totalCompletions}</p>
             <p className="mt-1 text-xs text-muted">Total Completions</p>
           </div>
           <ArrowRight className="ml-auto hidden h-4 w-4 text-faint sm:block" />
@@ -246,25 +249,26 @@ function StreakWidget() {
   const prev = [...MILESTONES].reverse().find((m) => m <= streak.current) ?? 0;
   const progress = next ? (streak.current - prev) / (next - prev) : 1;
   return (
-    <div className="relative h-full min-h-[150px] overflow-hidden rounded-2xl border border-accent/40 bg-gradient-to-br from-accent via-accent-strong to-[#2e1065] p-5 text-white shadow-[0_18px_40px_-20px_var(--accent)]">
-      <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/10 blur-2xl" />
+    <div className="relative h-full min-h-[150px] overflow-hidden rounded-2xl border border-accent/40 bg-gradient-to-br from-accent via-accent-strong to-[#240d52] p-5 text-white shadow-[0_14px_36px_-16px_var(--accent)]">
+      <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/25 to-transparent pointer-events-none" />
       <TrophyArt className="absolute -left-1 bottom-1 h-28 w-28 drop-shadow-[0_8px_16px_rgba(0,0,0,.35)] md:h-32 md:w-32" />
       <div className="relative ml-[104px] md:ml-[120px]">
-        <h3 className="text-xl font-extrabold md:text-2xl">{streak.current > 0 ? `${streak.current} Day Streak!` : 'Start a streak today'}</h3>
-        <p className="mt-1 text-sm text-white/80">
+        <h3 className="text-xl font-extrabold tracking-tight md:text-2xl">{streak.current > 0 ? `${streak.current} Day Streak!` : 'Start a streak today'}</h3>
+        <p className="mt-1 text-sm text-white/85">
           {streak.current > 0 ? "You're on fire! Keep going 🔥" : 'Complete your scheduled tasks to light the flame.'}
         </p>
         {next && (
           <div className="mt-3">
-            <div className="h-1.5 overflow-hidden rounded-full bg-white/20">
-              <div className="h-full rounded-full bg-white transition-all" style={{ width: `${progress * 100}%` }} />
+            <div className="h-2 overflow-hidden rounded-full bg-white/20 p-0.5">
+              <div className="h-full rounded-full bg-white shadow-[0_0_8px_#ffffff] transition-all duration-500" style={{ width: `${progress * 100}%` }} />
             </div>
-            <p className="mt-1 text-[11px] text-white/75">
+            <p className="mt-1 text-[11px] text-white/80">
               {next - streak.current} more {next - streak.current === 1 ? 'day' : 'days'} to the {next}-day milestone · best {longestStreak}
             </p>
           </div>
         )}
-        <a href="#/achievements" className="mt-3 inline-flex items-center gap-1 rounded-lg bg-white/15 px-3 py-1.5 text-xs font-semibold backdrop-blur hover:bg-white/25">
+        <a href="#/achievements" className="mt-3.5 inline-flex items-center gap-1 rounded-xl bg-white/15 px-3 py-1.5 text-xs font-semibold backdrop-blur hover:bg-white/25 transition active:scale-95">
           View Details <ArrowRight className="h-3.5 w-3.5" />
         </a>
       </div>

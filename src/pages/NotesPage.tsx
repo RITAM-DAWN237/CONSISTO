@@ -201,7 +201,7 @@ function NoteCard({ note, list }: { note: Note; list?: boolean }) {
   const icon = note.type === 'quick' ? <StickyNote className="h-4 w-4 shrink-0 text-warn" /> : <FileText className="h-4 w-4 shrink-0 text-info" />;
   if (list) {
     return (
-      <div role="button" tabIndex={0} onClick={() => ui.openNote(note.id)} onKeyDown={(e) => e.key === 'Enter' && ui.openNote(note.id)} className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-fg/[0.03]">
+      <div role="button" tabIndex={0} onClick={() => ui.openNote(note.id)} onKeyDown={(e) => e.key === 'Enter' && ui.openNote(note.id)} className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-fg/[0.04] transition-colors duration-150">
         {icon}
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-fg">{note.title || 'Untitled note'}</p>
@@ -224,7 +224,7 @@ function NoteCard({ note, list }: { note: Note; list?: boolean }) {
       tabIndex={0}
       onClick={() => ui.openNote(note.id)}
       onKeyDown={(e) => e.key === 'Enter' && ui.openNote(note.id)}
-      className="card group flex min-h-[150px] cursor-pointer flex-col p-4 transition hover:-translate-y-0.5 hover:border-line-strong"
+      className="card group flex min-h-[150px] cursor-pointer flex-col p-4 transition-all duration-200 hover:-translate-y-1 hover:border-line-strong hover:shadow-lg active:scale-[0.99]"
       style={note.color ? { borderLeft: `3px solid ${note.color}`, background: `linear-gradient(180deg, ${hexToRgba(note.color, 0.08)}, var(--card) 60%)` } : undefined}
     >
       <div className="flex items-start gap-2">

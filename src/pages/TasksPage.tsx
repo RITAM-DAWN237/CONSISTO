@@ -100,7 +100,7 @@ function TaskListRow({ task }: { task: Task }) {
     if (await ui.confirm({ title: `Delete "${task.title}"?`, message: 'This also deletes its completion history. Archive instead to keep it.', confirmText: 'Delete', danger: true })) void data.deleteTask(task);
   };
   return (
-    <div role="button" tabIndex={0} onClick={() => ui.openTaskDetails(task.id)} onKeyDown={(e) => e.key === 'Enter' && ui.openTaskDetails(task.id)} className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-fg/[0.03]">
+    <div role="button" tabIndex={0} onClick={() => ui.openTaskDetails(task.id)} onKeyDown={(e) => e.key === 'Enter' && ui.openTaskDetails(task.id)} className="flex cursor-pointer items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-fg/[0.04]">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="truncate text-sm font-semibold text-fg">{task.title}</p>

@@ -155,7 +155,7 @@ function Sidebar() {
   return (
     <aside
       className={cn(
-        'fixed z-40 hidden flex-col border-line bg-surface transition-[width] duration-200 md:flex',
+        'fixed z-40 hidden flex-col border-line bg-surface/90 backdrop-blur-xl transition-[width] duration-200 md:flex',
         floating ? 'inset-y-3 left-3 rounded-2xl border shadow-xl' : 'inset-y-0 left-0 border-r',
         collapsed ? 'w-[72px]' : 'w-[72px] lg:w-60'
       )}
@@ -175,8 +175,8 @@ function Sidebar() {
               title={item.label}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors',
-                active ? 'bg-accent text-accent-fg shadow-[0_10px_28px_-14px_var(--accent)]' : 'text-muted hover:bg-fg/[0.05] hover:text-fg'
+                'flex h-11 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-all duration-150',
+                active ? 'bg-gradient-to-r from-accent to-accent-strong text-accent-fg shadow-[0_6px_18px_-4px_var(--accent)] font-semibold' : 'text-muted hover:bg-fg/[0.05] hover:text-fg'
               )}
             >
               <item.icon className="h-5 w-5 shrink-0" />
@@ -240,12 +240,12 @@ function SyncStatus({ compact }: { compact?: boolean }) {
 function TopBar() {
   const { profile } = useData();
   return (
-    <header className="sticky top-0 z-30 hidden h-16 items-center gap-3 border-b border-line bg-bg/80 px-6 backdrop-blur-md md:flex">
+    <header className="sticky top-0 z-30 hidden h-16 items-center gap-3 border-b border-line bg-bg/80 px-6 backdrop-blur-xl md:flex">
       <GlobalSearch className="max-w-md" />
-      <div className="ml-auto flex items-center gap-1.5">
+      <div className="ml-auto flex items-center gap-2">
         <SyncStatus />
         <NotificationBell />
-        <a href="#/profile" aria-label="Profile" className="ml-1 rounded-full">
+        <a href="#/profile" aria-label="Profile" className="ml-1 rounded-full ring-2 ring-transparent transition hover:ring-accent/40">
           <Avatar name={profile.displayName} photo={profile.photoData} size={36} />
         </a>
       </div>
@@ -271,11 +271,11 @@ function MobileTopBar() {
   const [searching, setSearching] = useState(false);
   const title = TITLES[path];
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-bg/85 pt-[env(safe-area-inset-top)] backdrop-blur-md md:hidden">
+    <header className="sticky top-0 z-30 border-b border-line bg-bg/85 pt-[env(safe-area-inset-top)] backdrop-blur-xl md:hidden">
       {searching ? (
         <div className="flex h-14 items-center gap-2 px-3">
           <GlobalSearch autoFocus onDone={() => setSearching(false)} />
-          <button aria-label="Close search" onClick={() => setSearching(false)} className="grid h-10 w-10 place-items-center rounded-xl text-muted">
+          <button aria-label="Close search" onClick={() => setSearching(false)} className="grid h-10 w-10 place-items-center rounded-xl text-muted hover:text-fg">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -289,7 +289,7 @@ function MobileTopBar() {
               <span className="text-lg font-bold tracking-tight text-fg">Consisto</span>
             </a>
           )}
-          <div className="ml-auto flex items-center">
+          <div className="ml-auto flex items-center gap-0.5">
             <SyncStatus compact />
             <button aria-label="Search" onClick={() => setSearching(true)} className="grid h-10 w-10 place-items-center rounded-xl text-muted hover:text-fg">
               <Search className="h-5 w-5" />
@@ -309,7 +309,7 @@ function BottomNav() {
   const { path } = useRoute();
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface/90 pb-[env(safe-area-inset-bottom)] backdrop-blur-2xl md:hidden"
       aria-label="Main navigation"
     >
       <div className="grid h-16 grid-cols-5">
@@ -322,7 +322,7 @@ function BottomNav() {
               aria-current={active ? 'page' : undefined}
               className={cn('flex flex-col items-center justify-center gap-1 text-[11px] font-medium transition-colors', active ? 'text-accent' : 'text-faint')}
             >
-              <span className={cn('grid h-7 w-12 place-items-center rounded-full transition-colors', active && 'bg-accent/15')}>
+              <span className={cn('grid h-7 w-12 place-items-center rounded-full transition-all duration-150', active && 'bg-accent/15 scale-105')}>
                 <item.icon className="h-5 w-5" />
               </span>
               {item.label}
@@ -352,13 +352,13 @@ function Fab() {
   ];
   return (
     <div className="fixed right-4 z-40 flex flex-col items-end gap-2 md:hidden" style={{ bottom: 'calc(5rem + env(safe-area-inset-bottom))' }}>
-      {open && <div className="fixed inset-0 -z-10 bg-black/40 animate-fade-in" onClick={() => setOpen(false)} />}
+      {open && <div className="fixed inset-0 -z-10 bg-black/40 backdrop-blur-[2px] animate-fade-in" onClick={() => setOpen(false)} />}
       {open &&
         actions.map((a, i) => (
           <button
             key={a.label}
             onClick={a.run}
-            className="flex items-center gap-2 rounded-full border border-line bg-card-2 py-2 pl-3 pr-4 text-sm font-semibold text-fg shadow-xl animate-slide-up"
+            className="flex items-center gap-2 rounded-full border border-line bg-card-2/95 backdrop-blur-md py-2.5 pl-3.5 pr-4 text-sm font-semibold text-fg shadow-xl ring-1 ring-white/10 animate-slide-up active:scale-95"
             style={{ animationDelay: `${(actions.length - i) * 30}ms` }}
           >
             <a.icon className="h-4 w-4 text-accent" />
@@ -369,9 +369,9 @@ function Fab() {
         aria-label={open ? 'Close quick actions' : 'Create task or note'}
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
-        className="grid h-14 w-14 place-items-center rounded-full bg-accent text-accent-fg shadow-[0_12px_32px_-8px_var(--accent)] transition active:scale-95"
+        className="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-tr from-accent to-accent-strong text-accent-fg shadow-[0_12px_32px_-8px_var(--accent)] transition active:scale-95"
       >
-        <Plus className={cn('h-6 w-6 transition-transform', open && 'rotate-45')} />
+        <Plus className={cn('h-6 w-6 transition-transform duration-200', open && 'rotate-45')} />
       </button>
     </div>
   );
